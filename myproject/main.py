@@ -1,5 +1,7 @@
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordBearer
+from oauth2 import get_current_user
 
 import crud
 import models
@@ -43,9 +45,12 @@ def read_user(name: str, db: Session = Depends(get_db)):
 
 @app.post("/createUser/", response_model=schemas.user)
 def create_user(user: schemas.user_create, db: Session = Depends(get_db)):
-    db_user = crud.get_user(db, user_name=user.fullName)
+    db_user = crud.get_user(db, user_name=user.userName)
     if db_user:
-        raise HTTPException(status_code=400, detail="Name already registered")
+        raise HTTPException(status_code=400, detail="User already registered")
+
+    user.hash_password()
+
     return crud.create_user(db=db, user=user)
 
 

@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from bcrypt import hashpw, gensalt
 
 
 class user_base(BaseModel):
@@ -16,6 +17,9 @@ class user(user_base):
 
 
 class user_create(user_base):
+    def hash_password(self):
+        # Hash the password using bcrypt
+        self.password = hashpw(self.password.encode('utf-8'), gensalt())
     pass
 
 
