@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class user_base(BaseModel):
@@ -16,6 +17,7 @@ class user(user_base):
 
 class user_create(user_base):
     pass
+
 
 class user_update(BaseModel):
     fullName: Optional[str] = None
