@@ -1,7 +1,7 @@
 version: "3.9"
 services:
  system-service:
-  image: quintenvdw/apieindprojectquintenvdw
+  image: quintenvdw/api2quintenvdw
   ports:
     - "8000:8000"
   volumes:
