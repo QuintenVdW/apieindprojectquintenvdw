@@ -16,3 +16,9 @@ class user(user_base):
 
 class user_create(user_base):
     pass
+
+class user_update(BaseModel):
+    fullName: Optional[str] = None
+    userName: Optional[str] = None
+    password: Optional[str] = None
+

@@ -25,46 +25,33 @@ def get_db():
         db.close()
 
 
-@app.get("/faction/Jedi", response_model=list[schemas.Star_wars])
-def read_users(limit: int = 100, db: Session = Depends(get_db)):
-    users = crud.get_faction(db, faction=2, limit=limit)
-    return users
-
-
-@app.get("/faction/Sith", response_model=list[schemas.Star_wars])
-def read_users(limit: int = 100, db: Session = Depends(get_db)):
-    users = crud.get_faction(db, faction=1, limit=limit)
-    return users
-
-
-@app.get("/character/", response_model=schemas.Star_wars)
+@app.get("/getUser/", response_model=schemas.user)
 def read_user(name: str, db: Session = Depends(get_db)):
-    db_user = crud.get_name(db, user_name=name)
+    db_user = crud.get_user(db, user_name=name)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
 
-@app.delete("/character/", response_model=schemas.Star_wars)
+@app.delete("/deleteUser/", response_model=schemas.user)
 def read_user(name: str, db: Session = Depends(get_db)):
-    db_user = crud.delete_character_by_name(db, user_name=name)
+    db_user = crud.delete_user_by_name(db, user_name=name)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
 
-@app.post("/characters_add/", response_model=schemas.Star_wars)
-def create_user(user: schemas.Star_wars_create, db: Session = Depends(get_db)):
-    db_user = crud.get_name(db, user_name=user.name)
+@app.post("/createUser/", response_model=schemas.user)
+def create_user(user: schemas.user_create, db: Session = Depends(get_db)):
+    db_user = crud.get_user(db, user_name=user.fullName)
     if db_user:
         raise HTTPException(status_code=400, detail="Name already registered")
-    return crud.create_character(db=db, user=user)
+    return crud.create_user(db=db, user=user)
 
 
-@app.post("/faction_add/", response_model=schemas.Faction)
-def create_faction(faction: schemas.FactionCreate, db: Session = Depends(get_db)):
-    faction_check = crud.get_faction_by_name(db, faction_name=faction.name)
-    if faction_check:
-        raise HTTPException(status_code=400, detail="Name already registered")
-    return crud.create_faction(db=db, faction=faction)
-
+@app.put("/updateUser/", response_model=schemas.user)
+def update_user(user_id: int, user_update: schemas.user_update, db: Session = Depends(get_db)):
+    updated_user = crud.update_user(db, user_id, user_update)
+    if updated_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return updated_user

@@ -24,5 +24,15 @@ def create_user(db: Session, user: schemas.user_create):
     db.refresh(db_star_Wars)
     return db_star_Wars
 
+def update_user(db: Session, user_id: int, user_update: schemas.user_update):
+    db_user = db.query(models.user).filter(models.user.id == user_id).first()
+    if db_user:
+        for key, value in user_update.dict(exclude_unset=True).items():
+            setattr(db_user, key, value)
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+    return None
+
 
 
